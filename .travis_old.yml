@@ -1,0 +1,23 @@
+sudo: required
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t Mmaoo/PFSLab8 -f Dockerfile.dev1 .
+
+script:
+  - docker run -e CI=true Mmaoo/PFSLab8 npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker-test"
+  env: "dockertest-env"
+  bucket_name: "elasticbeanstalk-us-east-2-039699603980"
+  bucket_path: "docker-test"
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
